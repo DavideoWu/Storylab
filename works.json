@@ -1,0 +1,30 @@
+[
+  {
+    "title": "The Dragon Who Lost His Roar",
+    "author": "Maya",
+    "age": 8,
+    "image": "assets/works/dragon.svg",
+    "description": "A story about a dragon who has to find his voice again with a little help from his friends."
+  },
+  {
+    "title": "My Garden of Colors",
+    "author": "Theo",
+    "age": 6,
+    "image": "assets/works/garden.svg",
+    "description": "A drawing of a garden where every flower is a different color of the rainbow."
+  },
+  {
+    "title": "Rocket to Grandma's House",
+    "author": "Amara",
+    "age": 9,
+    "image": "assets/works/rocket.svg",
+    "description": "A story about building a rocket ship to visit Grandma who lives far away."
+  },
+  {
+    "title": "The Cat Who Painted the Moon",
+    "author": "Leo",
+    "age": 7,
+    "image": "assets/works/cat.svg",
+    "description": "A tale about a curious cat who sneaks out at night to paint the moon a new color."
+  }
+]
