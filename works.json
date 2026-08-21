@@ -26,5 +26,10 @@
     "age": 7,
     "image": "assets/works/cat.svg",
     "description": "A tale about a curious cat who sneaks out at night to paint the moon a new color."
+  },
+  {
+    "title": "My Resume",
+    "description": "David's resume",
+    "pdf": "assets/works/1787272046997-Resume_for_AI_Machine_Learning__1_.pdf"
   }
 ]
