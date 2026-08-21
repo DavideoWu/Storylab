@@ -26,7 +26,7 @@
     <button id="upload-toggle" class="button" type="button">Upload a story</button>
 
     <form id="upload-form" class="upload-form" hidden>
-      <button type="button" id="upload-close" class="upload-form__close" aria-label="Close">&times;</button>
+      <button type="button" id="upload-close" class="icon-button" aria-label="Close">&times;</button>
       <label>
         Title
         <input type="text" name="title" required>
@@ -58,6 +58,20 @@
       <button type="submit" class="button">Submit</button>
       <p class="upload-form__status" role="status"></p>
     </form>
+
+    <dialog id="delete-dialog" class="delete-dialog">
+      <form method="dialog" class="delete-dialog__form">
+        <p id="delete-dialog__message"></p>
+        <label>
+          Password
+          <input type="password" id="delete-password" required>
+        </label>
+        <div class="delete-dialog__actions">
+          <button type="button" id="delete-cancel">Cancel</button>
+          <button type="submit" value="confirm" class="button">Delete</button>
+        </div>
+      </form>
+    </dialog>
   </main>
 
   <footer>
