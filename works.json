@@ -30,5 +30,13 @@
     "image": "assets/works/cat.svg",
     "description": "A tale about a curious cat who sneaks out at night to paint the moon a new color.",
     "pdf": "assets/works/cat.pdf"
+  },
+  {
+    "title": "David's resume",
+    "author": "David",
+    "age": 21,
+    "image": "assets/works/1787275727124-360_F_563258868_PboRZl9biyYtQ9x59GSxBZOTrloP9GPQ.jpg",
+    "description": "My stupid ahh resume",
+    "pdf": "assets/works/1787275727124-Resume_for_AI_Machine_Learning__1_.pdf"
   }
 ]
