@@ -26,7 +26,7 @@ Whenever making changes, favor deleting/simplifying over adding. Do not introduc
 ├── about.html          # About page
 ├── styles.css          # Single shared stylesheet
 ├── script.js           # Small vanilla JS (nav toggle, gallery filtering, upload button, etc.)
-├── works.json          # Static data for children's works (title, author, image/pdf, description)
+├── works.json          # Static data for children's works — every entry has title, author, age, image, description, pdf (all required)
 ├── assets/
 │   └── works/          # Images/thumbnails/PDFs for each piece
 └── netlify/
@@ -38,10 +38,9 @@ Whenever making changes, favor deleting/simplifying over adding. Do not introduc
 
 ### Works page (`index.html`)
 - Grid/gallery of children's works.
-- Each item: A pdf of the story. Shows up on the gallery as title only; clicking it
-brings up full PDF.
+- Each item has a required image, title, child's name/age, short description, and an attached PDF. Every card is clickable — the whole card is a link that opens the full PDF in a new tab. No optional-field handling anywhere: every entry always has every field.
 - Data-driven from `works.json` so adding a new piece doesn't require touching HTML.
-- An **"Upload"** button opens a small form (title, description, PDF file, password field). It's visible to everyone, but only submits successfully if the password matches — in practice this means only one person (the site owner's sister) can actually publish through it. See "Uploads" below for how this is wired up.
+- An **"Upload"** button opens a small form (title, author, age, description, image file, PDF file, password field) — all fields required, matching the `works.json` schema exactly. It's visible to everyone, but only submits successfully if the password matches — in practice this means only one person (the site owner's sister) can actually publish through it. See "Uploads" below for how this is wired up.
 
 ### About page (`about.html`)
 - Short mission statement for Storylab.
@@ -53,11 +52,11 @@ There's exactly one person besides the site owner who can add works: the owner's
 
 - The upload form on the Works page posts to one serverless function (`netlify/functions/upload.js`).
 - The function checks the submitted password against a single secret stored as an environment variable (e.g. `UPLOAD_PASSWORD`) — never hardcode it in the repo.
-- On success, the function stores the PDF (e.g. commits it to `assets/works/` via the GitHub API, or uploads to a blob store) and appends the new entry to `works.json`.
-- On failure (wrong password), it just returns an error — no accounts, no sessions, no password reset flow, no rate limiting beyond whatever the host gives for free.
+- The function requires title, author, age, description, image, and PDF — if any are missing, it rejects the request before touching GitHub. This keeps every entry in `works.json` shaped identically, so the gallery template never needs to handle missing fields.
+- On success, the function commits the image and the PDF into `assets/works/` via the GitHub API, then appends the new entry (`{ title, author, age, image, description, pdf }`) to `works.json`.
+- On failure (wrong password or missing fields), it just returns an error — no accounts, no sessions, no password reset flow, no rate limiting beyond whatever the host gives for free.
 - Keep this function small and single-purpose. If it starts needing multiple endpoints, roles, or a database, that's a sign to stop and reconsider rather than expand it.
 - **Required environment variables** (set in the Netlify dashboard, not the repo): `UPLOAD_PASSWORD` (the shared password), `GITHUB_TOKEN` (a token with contents write access to this repo), `GITHUB_REPO` (`owner/repo`), and optionally `GITHUB_BRANCH` (defaults to `main`).
-- **Known gap**: new entries from `upload.js` are shaped `{ title, description, pdf }` (no `image`/`author`/`age`), but the v0.2 gallery cards still render `image`/`author`/`age`. Uploaded works won't display correctly until the gallery is reworked to the title-only/click-to-view-PDF model described above — deferred on purpose for now.
 
 ## Conventions
 

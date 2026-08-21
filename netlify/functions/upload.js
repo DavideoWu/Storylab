@@ -12,14 +12,14 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid request body." }) };
   }
 
-  const { title, description, password, pdfBase64, pdfFilename } = payload;
+  const { title, author, age, description, password, pdfBase64, pdfFilename, imageBase64, imageFilename } = payload;
 
   if (password !== process.env.UPLOAD_PASSWORD) {
     return { statusCode: 401, body: JSON.stringify({ error: "Incorrect password." }) };
   }
 
-  if (!title || !pdfBase64 || !pdfFilename) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Title and PDF file are required." }) };
+  if (!title || !author || !age || !description || !pdfBase64 || !pdfFilename || !imageBase64 || !imageFilename) {
+    return { statusCode: 400, body: JSON.stringify({ error: "Title, author, age, description, image, and PDF file are all required." }) };
   }
 
   const token = process.env.GITHUB_TOKEN;
@@ -32,8 +32,11 @@ exports.handler = async (event) => {
     "Content-Type": "application/json",
   };
 
-  const safeName = pdfFilename.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const pdfPath = `assets/works/${Date.now()}-${safeName}`;
+  const timestamp = Date.now();
+  const safePdfName = pdfFilename.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const safeImageName = imageFilename.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const pdfPath = `assets/works/${timestamp}-${safePdfName}`;
+  const imagePath = `assets/works/${timestamp}-${safeImageName}`;
 
   try {
     const pdfRes = await fetch(`${GITHUB_API}/repos/${repo}/contents/${pdfPath}`, {
@@ -50,6 +53,20 @@ exports.handler = async (event) => {
       throw new Error(`Failed to upload PDF: ${await pdfRes.text()}`);
     }
 
+    const imageRes = await fetch(`${GITHUB_API}/repos/${repo}/contents/${imagePath}`, {
+      method: "PUT",
+      headers: githubHeaders,
+      body: JSON.stringify({
+        message: `Add image for work: ${title}`,
+        content: imageBase64,
+        branch,
+      }),
+    });
+
+    if (!imageRes.ok) {
+      throw new Error(`Failed to upload image: ${await imageRes.text()}`);
+    }
+
     const worksRes = await fetch(`${GITHUB_API}/repos/${repo}/contents/works.json?ref=${branch}`, {
       headers: githubHeaders,
     });
@@ -63,7 +80,10 @@ exports.handler = async (event) => {
 
     works.push({
       title,
-      description: description || "",
+      author,
+      age: Number(age),
+      image: imagePath,
+      description,
       pdf: pdfPath,
     });
 

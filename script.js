@@ -6,12 +6,12 @@ async function renderGallery() {
   const works = await response.json();
 
   gallery.innerHTML = works.map((work) => `
-    <article class="card">
+    <a class="card" href="${work.pdf}" target="_blank" rel="noopener">
       <img class="card__image" src="${work.image}" alt="${work.title}">
       <h2>${work.title}</h2>
-      <p class="card__meta">by ${work.author}${work.age ? `, age ${work.age}` : ""}</p>
+      <p class="card__meta">by ${work.author}, age ${work.age}</p>
       <p>${work.description}</p>
-    </article>
+    </a>
   `).join("");
 }
 
@@ -41,16 +41,21 @@ function setupUploadForm() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const status = form.querySelector(".upload-form__status");
-    const file = form.pdf.files[0];
+    const pdfFile = form.pdf.files[0];
+    const imageFile = form.image.files[0];
 
     status.textContent = "Uploading…";
 
     const payload = {
       title: form.title.value,
+      author: form.author.value,
+      age: form.age.value,
       description: form.description.value,
       password: form.password.value,
-      pdfFilename: file.name,
-      pdfBase64: await fileToBase64(file),
+      pdfFilename: pdfFile.name,
+      pdfBase64: await fileToBase64(pdfFile),
+      imageFilename: imageFile.name,
+      imageBase64: await fileToBase64(imageFile),
     };
 
     try {
