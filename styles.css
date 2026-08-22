@@ -49,6 +49,12 @@ footer {
   color: var(--color-text);
 }
 
+.site-nav__title img {
+  display: block;
+  height: 128px;
+  width: auto;
+}
+
 .site-nav__links {
   display: flex;
   gap: 1.25rem;
@@ -76,6 +82,63 @@ main {
 h1 {
   font-size: 1.75rem;
   margin-top: 0;
+}
+
+.details-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-section--1 {
+  background-image: url("assets/home/balloons.jpg");
+}
+
+.hero-section--2 {
+  background-image: url("assets/home/chinatown.jpg");
+}
+
+.hero-section--3 {
+  background-image: url("assets/home/harbor.jpg");
+}
+
+.hero-section__content {
+  max-width: 42rem;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  padding: 2.5rem;
+  border-radius: 8px;
+  font-size: 1.25rem;
+}
+
+.hero-section__content h1,
+.hero-section__content h2 {
+  color: #fff;
+}
+
+.hero-section__content h1 {
+  font-size: 3rem;
+}
+
+.hero-section__content h2 {
+  font-size: 2rem;
+}
+
+.home-main {
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .gallery {

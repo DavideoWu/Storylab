@@ -1,9 +1,12 @@
 # Storylab
 
-A small demo website for Storylab. It has exactly two pages:
+A small demo website for Storylab. It has exactly three pages:
 
-1. **Works** — displays children's creative works (stories, drawings, etc.)
-2. **About** — a short section about Storylab
+1. **Home** (`home.html`) — describes the current Storylab workshop/program
+2. **Works** (`index.html`) — displays children's creative works (stories, drawings, etc.)
+3. **About** (`about.html`) — a short section about Storylab
+
+Note the filenames don't match the nav labels 1:1: `index.html` is the Works page, not Home — that was a deliberate choice to keep the existing Works/About pages untouched when Home was added, rather than renaming files around. One consequence: static hosts (including Netlify) serve `index.html` at the bare site root (`/`) by default, so visiting the root URL lands on Works, not Home — Home is only reachable via `home.html` or the nav link. Don't try to silently fix this by renaming files unless asked; it'd touch both existing pages for a cosmetic reason.
 
 ## Philosophy
 
@@ -11,7 +14,7 @@ This is a demo site, not a product. Keep it simple on purpose:
 
 - No build step, no bundler, no package.json, no framework for the site itself.
 - Plain HTML, CSS, and a sprinkle of vanilla JS — nothing else.
-- Two pages, shared nav/footer, one stylesheet.
+- Three pages, shared nav/footer, one stylesheet.
 - No database, no user accounts, no general auth system. Works content is static data (JSON or hardcoded HTML) checked into the repo.
 - **One deliberate exception**: two small serverless functions power uploading and deleting works (see "Uploads" below). This is the only server-side code in the project — don't let it grow into a general backend.
 - If a feature would require adding a build tool or framework to justify itself, that's a signal to cut the feature, not add the tool.
@@ -22,7 +25,8 @@ Whenever making changes, favor deleting/simplifying over adding. Do not introduc
 
 ```
 /
-├── index.html          # Works page (home)
+├── home.html           # Home page — describes the current workshop/program
+├── index.html          # Works page (despite the filename, this is NOT Home — see note above)
 ├── about.html          # About page
 ├── styles.css          # Single shared stylesheet
 ├── script.js           # Small vanilla JS (nav toggle, gallery filtering, upload/delete buttons, etc.)
@@ -36,6 +40,13 @@ Whenever making changes, favor deleting/simplifying over adding. Do not introduc
 ```
 
 ## Pages
+
+### Home page (`home.html`)
+- Describes whatever program Storylab is currently running (e.g. a specific workshop) — headline, a few paragraphs, and a plain "Details" list (grades, schedule, duration, fee, group size).
+- The whole page is three full-viewport-height `<section class="hero-section">` blocks stacked inside `<main>`, each with its own full-bleed background image (`assets/home/hero-*.svg`, placeholders for now) and a dark overlay behind the text for readability — scrolling from one section to the next changes the background. Pure CSS, no JS involved.
+- `<main>` on this page uses the `.home-main` class to opt out of the normal `main { max-width; padding; margin }` rule (used by Works/About) so the hero sections can go edge-to-edge — each section's own `.hero-section__content` box handles the readable-width text column instead.
+- Static content, no data-driven parts — just HTML/CSS like the About page.
+- This is the content someone lands on when they click "Home" in the nav; it is not served by default at the bare site root (see the filename note above).
 
 ### Works page (`index.html`)
 - Grid/gallery of children's works.
@@ -78,4 +89,5 @@ There's exactly one person besides the site owner who can add or remove works: t
 - [ ] **v0.5 — Optional nice-to-haves** (only if still simple): client-side search/filter on Works page, "featured work" on the home page, light/dark toggle.
 - [ ] **v0.6 — Sister upload**: Upload button + form on Works page; `netlify/functions/upload.js` with password check via env var; on success, commits PDF to `assets/works/` and appends to `works.json`.
 - [ ] **v0.7 — Delete a work**: × button on each card; `netlify/functions/delete.js` with the same password check; on success, removes the work's files from `assets/works/` and its entry from `works.json`.
+- [ ] **v0.8 — Home page**: `home.html` describing the current workshop/program, added to the shared nav on all pages.
 - **Explicitly out of scope for this demo**: general user accounts/login, CMS, public API, comments, build tooling, animations library, multi-user auth beyond the single shared upload/delete password.
